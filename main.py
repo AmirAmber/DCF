@@ -5,6 +5,8 @@ import pandas as pd
 import requests  # api
 
 # dataframe display settings
+from utils import generate_relevant_years
+
 pd.set_option('display.max_rows', 600)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
@@ -24,20 +26,8 @@ API_Key_List = ['f1e24449c0msh918d506fb19bfd3p18eab6jsn6da1404b91fe',
                 '037d11bf9amsh3307c552c5467c3p1867b9jsne16365274914',
                 '7c9e8606c9msh5a1a9540ba92b47p118e31jsn9e2a3167ad99']
 
-# SP500 list from wikipedia
-SP500_df = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')[0]
-SP500 = SP500_df['Symbol'].values.tolist()
-# -------------------------------------------------------------------------------
-TTM_year = datetime.datetime.now().year  # 2022 THIS YEAR
-TTM_1 = TTM_year - 1
-TTM_2 = TTM_1 - 1
-TTM_3 = TTM_2 - 1
-TTM_4 = TTM_3 - 1
-TTM_5 = TTM_4 - 1
+TTM_year, TTM_1, TTM_2, TTM_3, TTM_4, TTM_5 = generate_relevant_years(6)
 
-
-# years = list(range(datetime.datetime.now().year, datetime.datetime.now().year -6, -1))
-# print(years)
 
 class Company:
     def __init__(self, Ticker, API_Key):
@@ -125,8 +115,8 @@ class Company:
             try:
                 try:
                     self.Current_Assets = \
-                    financialsv2.get('balanceSheetHistoryQuarterly').get('balanceSheetStatements')[0].get(
-                        'totalCurrentAssets').get('raw')
+                        financialsv2.get('balanceSheetHistoryQuarterly').get('balanceSheetStatements')[0].get(
+                            'totalCurrentAssets').get('raw')
                     Error_Dict['Current Assets'] = ""
                 except:
                     self.Current_Assets = statisticsv3.get('financialData').get('totalCash').get('raw')
@@ -447,7 +437,7 @@ def Save_List(list):
                 comp = Company('{}'.format(company), API_Key)
                 while comp.cashflowsv2 == {
                     'message': 'You have exceeded the MONTHLY quota for Requests on your current plan, BASIC. Upgrade your plan at https://rapidapi.com/apidojo/api/yh-finance'} and API_Key <= len(
-                        API_Key_List):
+                    API_Key_List):
                     API_Key += 1
                     try:
                         comp = Company('{}'.format(company), API_Key)
