@@ -62,22 +62,8 @@ class Financial_Dicts_For_Ticker:
 
 
 
-class Statistic_Data_For_Ticker(Financial_Dicts_For_Ticker):
-    def __init__(self, ticker, api_key):
-        Financial_Dicts_For_Ticker.__init__(self, ticker, api_key,)
-        self.Current_Price = self.list_of_dicts[0].get('financialData').get('currentPrice').get('raw')
 
 
 
-comp = Statistic_Data_For_Ticker('ba',API_Key_List[0])
-print(comp.Current_Price)
-
-def get_next_key(list_of_keys,current_key):
-    key_index = list_of_keys.index(current_key)
-    if key_index == range(len(list_of_keys)):
-        return list_of_keys[0]
-    else:
-        new_key = key_index + 1
-        return list_of_keys[new_key]
 
 
